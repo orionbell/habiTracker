@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import json
+import yaml
 import datetime
 import os
 import curses
@@ -10,8 +10,13 @@ import calendar
 HEIGHT = 16
 WIDTH = 40
 PADDING = (0,0)
+FILEPATH = 'habits.yaml' 
 
 def init(win):
+    if not os.path.isfile(FILEPATH):
+        with open(FILEPATH,'w') as f:
+            data = {"habits":[],"states":[]}
+            yaml.dump(data,f,default_flow_style=False)
     curses.init_pair(1,curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2,curses.COLOR_BLACK, curses.COLOR_CYAN)
     curses.curs_set(0)
@@ -105,14 +110,14 @@ def main(main_win):
     prog_win = draw_progress(main_win)
     habits_win = draw_habits(main_win)
     tab = 0 
+    factor = 0
+    days = 0
     while True:
         if tab == 0:
-            cal_win = draw_calander(main_win)
+            cal_win = draw_calander(main_win,factor,days)
             prog_win = draw_progress(main_win)
             habits_win = draw_habits(main_win)
             cal_win.nodelay(True)
-            factor = 0
-            days = 0
             while True:
                 try:
                     key = cal_win.getch()
@@ -152,7 +157,7 @@ def main(main_win):
                 except:
                     continue
         elif tab == 1:
-            cal_win = draw_calander(main_win,isFocused=False)
+            cal_win = draw_calander(main_win,isFocused=False,factor=factor, days=days)
             prog_win = draw_progress(main_win,isFocused=True)
             habits_win = draw_habits(main_win)
             while True:
@@ -167,7 +172,7 @@ def main(main_win):
                     tab = (tab + 1) % 3
                     break
         else:
-            cal_win = draw_calander(main_win,isFocused=False)
+            cal_win = draw_calander(main_win,isFocused=False,factor=factor,days=days)
             prog_win = draw_progress(main_win)
             habits_win = draw_habits(main_win,isFocused=True)
             habits_win.nodelay(True)
