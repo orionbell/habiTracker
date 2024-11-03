@@ -86,6 +86,7 @@ def draw_progress(win, isFocused=False):
     win.refresh()
     progress_win.addstr(0, ((curses.COLS - WIDTH)//2)-4,"Progress")
     progress_win.refresh()
+    return progress_win
 
 def draw_habits(win,isFocused=False):
     habits_win = curses.newwin(curses.LINES - PADDING[1] - HEIGHT, WIDTH, HEIGHT, curses.COLS - WIDTH)
@@ -96,58 +97,88 @@ def draw_habits(win,isFocused=False):
     win.refresh()
     habits_win.addstr(0, ((WIDTH)//2)-7,"Today's habits")
     habits_win.refresh()
+    return habits_win
 
 def main(main_win):
     init(main_win)
     cal_win = draw_calander(main_win)
-    draw_progress(main_win)
-    draw_habits(main_win)
+    prog_win = draw_progress(main_win)
+    habits_win = draw_habits(main_win)
     tab = 0 
-    if tab == 0:
-        cal_win.nodelay(True)
-        factor = 0
-        days = 0
-        while True:
-            try:
-                key = cal_win.getkey()
-                if key == 'm':
-                    factor += 1
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key == 'M':
-                    factor -= 1
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key == 'y':
-                    factor += 12
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key == 'Y':
-                    factor -= 12
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key.lower() == 'h':
-                    days -= 1
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key.lower() == 'j':
-                    days += 7
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key.lower() == 'k':
-                    days -= 7
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key.lower() == 'l':
-                    days += 1
-                    cal_win = draw_calander(main_win,factor,days)
-                elif key.lower() == 'b':
-                    cal_win = draw_calander(main_win)
-                    factor = 0
-                    days = 0
-                elif key.lower() == 'q':
+    while True:
+        if tab == 0:
+            cal_win = draw_calander(main_win)
+            prog_win = draw_progress(main_win)
+            habits_win = draw_habits(main_win)
+            cal_win.nodelay(True)
+            factor = 0
+            days = 0
+            while True:
+                try:
+                    key = cal_win.getch()
+                    if key == ord('m'):
+                        factor += 1
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('M'):
+                        factor -= 1
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('y'):
+                        factor += 12
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('Y'):
+                        factor -= 12
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('h'):
+                        days -= 1
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('j'):
+                        days += 7
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('k'):
+                        days -= 7
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('l'):
+                        days += 1
+                        cal_win = draw_calander(main_win,factor,days)
+                    elif key == ord('b'):
+                        cal_win = draw_calander(main_win)
+                        factor = 0
+                        days = 0
+                    elif key == 9:
+                        tab = (tab + 1) % 3
+                        break
+                    elif key == ord('q'):
+                        return
+                except:
+                    continue
+        elif tab == 1:
+            cal_win = draw_calander(main_win,isFocused=False)
+            prog_win = draw_progress(main_win,isFocused=True)
+            habits_win = draw_habits(main_win)
+            while True:
+                prog_win.nodelay(True)
+                try:
+                    char = prog_win.getch()
+                except:
+                    continue
+                if char == ord('q'):
+                    return
+                elif char == 9:
+                    tab = (tab + 1) % 3
                     break
-            except:
-                continue
-    elif tab == 1:
-        draw_calander(main_win,isFocused=False)
-        draw_progress(main_win,isFocused=True)
-        draw_habits(main_win)
-    else:
-        draw_calander(main_win,isFocused=False)
-        draw_progress(main_win)
-        draw_habits(main_win,isFocused=True)
+        else:
+            cal_win = draw_calander(main_win,isFocused=False)
+            prog_win = draw_progress(main_win)
+            habits_win = draw_habits(main_win,isFocused=True)
+            habits_win.nodelay(True)
+            while True:
+                try:
+                    char = habits_win.getch()
+                except:
+                    continue
+                if char == ord('q'):
+                    return
+                elif char == 9:
+                    tab = (tab + 1) % 3
+                    break
 curses.wrapper(main)
