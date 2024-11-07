@@ -12,6 +12,7 @@ HEIGHT = 16
 WIDTH = 40
 PADDING = (0,0)
 FILEPATH = 'habits.json' 
+DAY = datetime.datetime.today()
 
 def init(win):
     if not os.path.isfile(FILEPATH):
@@ -81,6 +82,7 @@ def draw_calander(win,factor = 0, days=0, isFocused=True):
            calendar_win.attroff(curses.color_pair(2))
         calendar_win.move(line,col)
     calendar_win.refresh()
+    DAY = current_today
     return calendar_win
 
 def draw_progress(win, isFocused=False):
@@ -90,7 +92,7 @@ def draw_progress(win, isFocused=False):
         progress_win.attrset(curses.color_pair(1))
     progress_win.border()
     win.refresh()
-    progress_win.addstr(0, ((curses.COLS - WIDTH)//2)-9,"Progress and Stats")
+    progress_win.addstr(0, ((curses.COLS - WIDTH)//2)-9,"Progress and States")
     progress_win.refresh()
     return progress_win
 
@@ -103,6 +105,7 @@ def draw_habits(win,isFocused=False):
     win.refresh()
     habits_win.addstr(0, ((WIDTH)//2)-7,"Today's habits")
     habits_win.refresh()
+
     return habits_win
     
 def main(main_win):
