@@ -90,7 +90,7 @@ def draw_progress(win, isFocused=False):
         progress_win.attrset(curses.color_pair(1))
     progress_win.border()
     win.refresh()
-    progress_win.addstr(0, ((curses.COLS - WIDTH)//2)-4,"Progress")
+    progress_win.addstr(0, ((curses.COLS - WIDTH)//2)-9,"Progress and Stats")
     progress_win.refresh()
     return progress_win
 
@@ -153,6 +153,12 @@ def main(main_win):
                     elif key == 9:
                         tab = (tab + 1) % 3
                         break
+                    elif key == ord('H') or key == ord('J'):
+                        tab = (tab + 1) % 3
+                        break
+                    elif key == ord('L') or key == ord('K'):
+                        tab = (tab - 1) % 3
+                        break
                     elif key == ord('Q'):
                         return
                 except:
@@ -169,6 +175,12 @@ def main(main_win):
                     continue
                 if char == ord('Q'):
                     return
+                elif char == ord('H') or char == ord('J'):
+                    tab = (tab + 1) % 3
+                    break
+                elif char == ord('L') or char == ord('K'):
+                    tab = (tab - 1) % 3
+                    break
                 elif char == 9:
                     tab = (tab + 1) % 3
                     break
@@ -452,8 +464,14 @@ def main(main_win):
                         prompts_win.clear()
                         prompts_win.refresh()
                         continue
+                elif char == ord('H') or char == ord('J'):
+                    tab = (tab + 1) % 3
+                    break
+                elif char == ord('L') or char == ord('K'):
+                    tab = (tab - 1) % 3
+                    break
                 elif char == 9:
                     tab = (tab + 1) % 3
                     break
-                        
+
 curses.wrapper(main)
