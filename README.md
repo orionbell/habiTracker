@@ -1,6 +1,5 @@
-> !NOTE
->  This project is still in development, and not usable yet
-> 
+> ![NOTE]
+> This project is still in development, and not usable yet
 
 
 # habiTracker
