@@ -1,3 +1,8 @@
+> NOTE!
+>  This project is still in development, and not usable yet
+> 
+
+
 # habiTracker
 A basic terminal based habit tracker
 
